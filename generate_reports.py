@@ -32,11 +32,12 @@ def process_input_results_file(input_file):
     else:
         print("Could not find input file")
 
-def create_report(root_directory):
+def create_report(root_directory, compliance_standard):
 
     current_time = datetime.datetime.now()
     aggregate_report = {}
     aggregate_report["description"] = 'Aggregate compliance report'
+    aggregate_report["compliance_standard"] = compliance_standard
     aggregate_report["timestamp"] = current_time.strftime("%c")
     git_sha = os.getenv('GITHUB_SHA')
     aggregate_report["git_sha"] = git_sha
@@ -65,7 +66,7 @@ def main(arg_parser):
     compliance_standard = args.compliance
 
     # Create report
-    create_report(root_directory)
+    create_report(root_directory, compliance_standard)
     
 if __name__ == "__main__":
     try:

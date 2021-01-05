@@ -10,12 +10,12 @@ from pathlib import Path
 ######
 # Intended to be used with build_reports.py which generates reports per stage in CI/CD pipeline
 # This script aggregates the reports from each stage in CI/CD flow
-# generate_reports.py --reports directory-compliance-manifest build-compliance-manifest.json registry-compliance-manifest.json
+# generate_reports.py --directory artifacts
 
 ###### Setup command line parser
 def setup_parser():
     parser = argparse.ArgumentParser(description="Tool for aggregate reports")
-    parser.add_argument('-d', '--directory', default='artifacts', help='root directory to search for json report files')
+    parser.add_argument('-d', '--directory', default='artifacts', help='directory to search for json report files')
     parser.add_argument('-c', '--compliance', default='cis', help='compliance check to evaluate. ex. cis')
 
     return parser

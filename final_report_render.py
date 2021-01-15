@@ -14,6 +14,13 @@ def get_compliance_result_grype_cis(data, compliance_sections):
     #    "summary": "summary",
     #    "status": "pass"
     #    }
+    grype_vuln_matches = data['matches']
+    severity_threshold = 'High'
+    vuln_status = 'Pass'
+    
+    for match in grype_vuln_matches:
+        if match['vulnerability']['severity'] == severity_threshold:
+            vuln_status = 'Fail'
 
     for compliance_section in compliance_sections:
         section = compliance_section.get('name')
@@ -21,7 +28,7 @@ def get_compliance_result_grype_cis(data, compliance_sections):
 
         # here is where each section would be implement a check against the grype output in 'data', for now hardcode pass
         if compliance_section.get('name') == "4.4":
-            status = 'pass'                                   
+            status = vuln_status                                   
         else:
             status = 'not_performed'
         el = {
@@ -74,6 +81,14 @@ def get_compliance_result_anchore_enterprise_cis(data, compliance_sections):
 
 def get_compliance_result_kube_bench_cis(data, compliance_sections):
     ret = []
+    kube_bench_section_3_tests = data[0]['tests']
+    section_3_1 = next((item for item in kube_bench_section_3_tests if item["section"] == "3.1"), False)
+    section_3_2 = next((item for item in kube_bench_section_3_tests if item["section"] == "3.2"), False)
+    if section_3_1.get("fail") == False:
+        section_3_1_status = 'Pass'
+
+    if section_3_2.get("fail") == False:
+        section_3_2_status = 'Pass'
     
     for compliance_section in compliance_sections:
         section = compliance_section.get('name')
@@ -81,35 +96,35 @@ def get_compliance_result_kube_bench_cis(data, compliance_sections):
 
         # here is where each section would be implement a check against the grype output in 'data', for now hardcode pass
         if compliance_section.get('name') == "3.1.1":
-            status = 'pass'
+            status = section_3_1_status
         elif compliance_section.get('name') == "3.1.2":
-            status = 'pass'
+            status = section_3_1_status
         elif compliance_section.get('name') == "3.1.3":
-            status = 'pass'
+            status = section_3_1_status
         elif compliance_section.get('name') == "3.1.4":
-            status = 'pass'
+            status = section_3_1_status
         elif compliance_section.get('name') == "3.2.1":
-            status = 'pass'
+            status = section_3_2_status
         elif compliance_section.get('name') == "3.2.2":
-            status = 'pass'
+            status = section_3_2_status
         elif compliance_section.get('name') == "3.2.3":
-            status = 'pass'
+            status = section_3_2_status
         elif compliance_section.get('name') == "3.2.4":
-            status = 'pass'
+            status = section_3_2_status
         elif compliance_section.get('name') == "3.2.5":
-            status = 'pass'
+            status = section_3_2_status
         elif compliance_section.get('name') == "3.2.6":
-            status = 'pass'
+            status = section_3_2_status
         elif compliance_section.get('name') == "3.2.7":
-            status = 'pass'
+            status = section_3_2_status
         elif compliance_section.get('name') == "3.2.8":
-            status = 'pass'
+            status = section_3_2_status
         elif compliance_section.get('name') == "3.2.9":
-            status = 'pass'
+            status = section_3_2_status
         elif compliance_section.get('name') == "3.2.10":
-            status = 'pass'
+            status = section_3_2_status
         elif compliance_section.get('name') == "3.2.11":
-            status = 'pass'                                
+            status = section_3_2_status                                
         else:
             status = 'not_performed'
         el = {
@@ -276,6 +291,10 @@ else:
 header = ['Stage', standard, 'Section', 'Detail', 'Status']
 t = plain_column_table(header)
 
+total_stages_passed = 0
+total_stages_failed = 0
+total_stages_skipped = 0
+
 for stage in result.get('results').keys():
    
     stage_passed = True
@@ -291,8 +310,13 @@ for stage in result.get('results').keys():
                 for cis_eval_result in cis_eval_results:
                     row = [stage, standard, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
                     t.add_row(row)
-                    if cis_eval_result.get('status') == 'fail':
+                    if cis_eval_result.get('status') == 'Fail':
+                        total_stages_failed += 1
                         stage_passed = False
+                    elif cis_eval_result.get('status') == 'Pass':
+                        total_stages_passed += 1
+                    else:
+                        total_stages_skipped += 1
         
         elif tool_info.get('name') == 'anchore-enterprise':
             if compliance_info.get('name') == 'cis':
@@ -301,8 +325,13 @@ for stage in result.get('results').keys():
                 for cis_eval_result in cis_eval_results:
                     row = [stage, standard, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
                     t.add_row(row)
-                    if cis_eval_result.get('status') == 'fail':
+                    if cis_eval_result.get('status') == 'Fail':
+                        total_stages_failed += 1
                         stage_passed = False
+                    elif cis_eval_result.get('status') == 'Pass':
+                        total_stages_passed += 1
+                    else:
+                        total_stages_skipped += 1
         
         elif tool_info.get('name') == 'kube-bench':
             if compliance_info.get('name') == 'cis':
@@ -311,8 +340,13 @@ for stage in result.get('results').keys():
                 for cis_eval_result in cis_eval_results:
                     row = [stage, standard, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
                     t.add_row(row)
-                    if cis_eval_result.get('status') == 'fail':
+                    if cis_eval_result.get('status') == 'Fail':
+                        total_stages_failed += 1
                         stage_passed = False
+                    elif cis_eval_result.get('status') == 'Pass':
+                        total_stages_passed += 1
+                    else:
+                        total_stages_skipped += 1
         
         elif tool_info.get('name') == 'anchore-cis-bench':
             if compliance_info.get('name') == 'cis':
@@ -321,8 +355,13 @@ for stage in result.get('results').keys():
                 for cis_eval_result in cis_eval_results:
                     row = [stage, standard, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
                     t.add_row(row)
-                    if cis_eval_result.get('status') == 'fail':
+                    if cis_eval_result.get('status') == 'Fail':
+                        total_stages_failed += 1
                         stage_passed = False
+                    elif cis_eval_result.get('status') == 'Pass':
+                        total_stages_passed += 1
+                    else:
+                        total_stages_skipped += 1
         
     else:
         row = [stage, 'N/A', 'N/A', 'N/A', 'N/A']
@@ -334,7 +373,6 @@ for stage in result.get('results').keys():
         stages_failed.append(stage)
         # if any one stage fails, global status is fail
         report_final_status = 'fail'
-
 
             
 result_table = t.get_string()
@@ -356,3 +394,7 @@ print(artifact_table)
 
 print("\nResults\n----------------\n")
 print(result_table)
+print("\nTotals\n----------------\n")
+print("Stages failed: {}".format(total_stages_failed))
+print("Stages passed: {}".format(total_stages_passed))
+print("Stages skipped: {}".format(total_stages_skipped))

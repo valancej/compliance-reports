@@ -41,34 +41,33 @@ def get_compliance_result_grype_cis(data, compliance_sections):
 
 def get_compliance_result_anchore_enterprise_cis(data, compliance_sections):
     ret = []
-
     for compliance_section in compliance_sections:
         section = compliance_section.get('name')
         summary = compliance_section.get('description')
 
         # here is where each section would be implement a check against the grype output in 'data', for now hardcode pass
         if compliance_section.get('name') == "4.1":
-            status = 'fail'
+            status = 'Pass'
         elif compliance_section.get('name') == "4.2":
-            status = 'pass'
+            status = 'Pass'
         elif compliance_section.get('name') == "4.3":
-            status = 'pass'
+            status = 'Pass'
         elif compliance_section.get('name') == "4.4":
-            status = 'pass'
+            status = 'Pass'
         elif compliance_section.get('name') == "4.5":
-            status = 'pass'
+            status = 'Pass'
         elif compliance_section.get('name') == "4.6":
-            status = 'pass'
+            status = 'Pass'
         elif compliance_section.get('name') == "4.7":
-            status = 'pass'
+            status = 'Pass'
         elif compliance_section.get('name') == "4.8":
-            status = 'pass'
+            status = 'Pass'
         elif compliance_section.get('name') == "4.9":
-            status = 'pass' 
+            status = 'Pass' 
         elif compliance_section.get('name') == "4.10":
-            status = 'pass' 
+            status = 'Pass' 
         elif compliance_section.get('name') == "5.8":
-            status = 'pass'                                               
+            status = 'Pass'                                               
         else:
             status = 'not_performed'
         el = {
@@ -95,7 +94,11 @@ def get_compliance_result_kube_bench_cis(data, compliance_sections):
         summary = compliance_section.get('description')
 
         # here is where each section would be implement a check against the grype output in 'data', for now hardcode pass
-        if compliance_section.get('name') == "3.1.1":
+        if compliance_section.get('name') == "1":
+            status = "Skipped. EKS Control Plane access required"
+        elif compliance_section.get('name') == "2":
+            status = "Skipped. EKS Control Plane access required"
+        elif compliance_section.get('name') == "3.1.1":
             status = section_3_1_status
         elif compliance_section.get('name') == "3.1.2":
             status = section_3_1_status
@@ -242,7 +245,11 @@ def get_compliance_result_anchore_cis_bench(data, compliance_sections):
         elif compliance_section.get('name') == "5.30":
             status = data['container']['cis_runtime_checks']['5.30'].get('status')
         elif compliance_section.get('name') == "5.31":
-            status = data['container']['cis_runtime_checks']['5.31'].get('status')                     
+            status = data['container']['cis_runtime_checks']['5.31'].get('status')
+        elif compliance_section.get('name') == "6.1":
+            status = "Skipped"
+        elif compliance_section.get('name') == "6.2":
+            status = "Skipped"                     
         else:
             status = 'not_performed'
         el = {
@@ -270,6 +277,8 @@ report_origin_stage = result.get('origin_stage')
 report_final_status = 'pass'
 report_compliance_type = result.get('compliance_type')
 report_compliance_standards = result.get('compliance_standards')
+registry_image = result.get('pipeline_ids').get('registry').get('metadata')[0].get('name')
+registry_sha = result.get('pipeline_ids').get('registry').get('metadata')[1].get('name')
 stages_passed = []
 stages_failed = []
     
@@ -301,6 +310,7 @@ for stage in result.get('results').keys():
     tool_info = result.get('results').get(stage).get('tool')
     compliance_info = result.get('results').get(stage).get('compliance')
     tool_output = result.get('results').get(stage).get('tool_result_data')
+
 
     if tool_info and compliance_info and tool_output:
         if tool_info.get('name') == 'anchore-grype':

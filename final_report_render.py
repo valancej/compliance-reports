@@ -128,7 +128,45 @@ def get_compliance_result_anchore_cis_bench(data, compliance_sections):
         summary = compliance_section.get('description')
 
         # here is where each section would be implement a check against the grype output in 'data', for now hardcode pass
-        if compliance_section.get('name') == "5.1":
+        if compliance_section.get('name') == "1.1.1-1.2.12":
+            status = "Skipped. Host access required"
+        elif compliance_section.get('name') == '2.1':
+            status = data['cis_daemon_checks']['2.1'].get('status')
+        elif compliance_section.get('name') == '2.2':
+            status = data['cis_daemon_checks']['2.2'].get('status')
+        elif compliance_section.get('name') == '2.3':
+            status = data['cis_daemon_checks']['2.3'].get('status')
+        elif compliance_section.get('name') == '2.4':
+            status = data['cis_daemon_checks']['2.4'].get('status')
+        elif compliance_section.get('name') == '2.5':
+            status = data['cis_daemon_checks']['2.5'].get('status')
+        elif compliance_section.get('name') == '2.6':
+            status = data['cis_daemon_checks']['2.6'].get('status')
+        elif compliance_section.get('name') == '2.7':
+            status = data['cis_daemon_checks']['2.7'].get('status')
+        elif compliance_section.get('name') == '2.8':
+            status = data['cis_daemon_checks']['2.8'].get('status')
+        elif compliance_section.get('name') == '2.9':
+            status = data['cis_daemon_checks']['2.9'].get('status')
+        elif compliance_section.get('name') == '2.10':
+            status = data['cis_daemon_checks']['2.10'].get('status')
+        elif compliance_section.get('name') == '2.11':
+            status = data['cis_daemon_checks']['2.11'].get('status')
+        elif compliance_section.get('name') == '2.12':
+            status = data['cis_daemon_checks']['2.12'].get('status')
+        elif compliance_section.get('name') == '2.13':
+            status = data['cis_daemon_checks']['2.13'].get('status')
+        elif compliance_section.get('name') == '2.14':
+            status = data['cis_daemon_checks']['2.14'].get('status')
+        elif compliance_section.get('name') == '2.15':
+            status = data['cis_daemon_checks']['2.15'].get('status')
+        elif compliance_section.get('name') == '2.16':
+            status = data['cis_daemon_checks']['2.16'].get('status')
+        elif compliance_section.get('name') == '2.17':
+            status = data['cis_daemon_checks']['2.17'].get('status')
+        elif compliance_section.get('name') == "3.1-3.22":
+            status = "Skipped. Host access required"
+        elif compliance_section.get('name') == "5.1":
             status = data['container']['cis_runtime_checks']['5.1'].get('status')
         elif compliance_section.get('name') == "5.2":
             status = data['container']['cis_runtime_checks']['5.2'].get('status')
@@ -216,6 +254,7 @@ report_id = result.get('report_id')
 report_origin_stage = result.get('origin_stage')
 report_final_status = 'pass'
 report_compliance_type = result.get('compliance_type')
+report_compliance_standards = result.get('compliance_standards')
 stages_passed = []
 stages_failed = []
     
@@ -229,8 +268,12 @@ for stage in result.get('pipeline_ids').keys():
         
 artifact_table = t.get_string()
 
+if report_compliance_type:
+    standard = report_compliance_type + " Standard"
+else:
+    standard = "Standard"
 
-header = ['Stage', 'Section', 'Detail', 'Status']
+header = ['Stage', standard, 'Section', 'Detail', 'Status']
 t = plain_column_table(header)
 
 for stage in result.get('results').keys():
@@ -243,42 +286,46 @@ for stage in result.get('results').keys():
     if tool_info and compliance_info and tool_output:
         if tool_info.get('name') == 'anchore-grype':
             if compliance_info.get('name') == 'cis':
+                standard = report_compliance_standards.get('docker')
                 cis_eval_results = get_compliance_result_grype_cis(tool_output, compliance_info.get('sections'))
                 for cis_eval_result in cis_eval_results:
-                    row = [stage, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
+                    row = [stage, standard, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
                     t.add_row(row)
                     if cis_eval_result.get('status') == 'fail':
                         stage_passed = False
         
         elif tool_info.get('name') == 'anchore-enterprise':
             if compliance_info.get('name') == 'cis':
+                standard = report_compliance_standards.get('docker')
                 cis_eval_results = get_compliance_result_anchore_enterprise_cis(tool_output, compliance_info.get('sections'))
                 for cis_eval_result in cis_eval_results:
-                    row = [stage, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
+                    row = [stage, standard, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
                     t.add_row(row)
                     if cis_eval_result.get('status') == 'fail':
                         stage_passed = False
         
         elif tool_info.get('name') == 'kube-bench':
             if compliance_info.get('name') == 'cis':
+                standard = report_compliance_standards.get('kubernetes')
                 cis_eval_results = get_compliance_result_kube_bench_cis(tool_output, compliance_info.get('sections'))
                 for cis_eval_result in cis_eval_results:
-                    row = [stage, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
+                    row = [stage, standard, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
                     t.add_row(row)
                     if cis_eval_result.get('status') == 'fail':
                         stage_passed = False
         
         elif tool_info.get('name') == 'anchore-cis-bench':
             if compliance_info.get('name') == 'cis':
+                standard = report_compliance_standards.get('docker')
                 cis_eval_results = get_compliance_result_anchore_cis_bench(tool_output, compliance_info.get('sections'))
                 for cis_eval_result in cis_eval_results:
-                    row = [stage, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
+                    row = [stage, standard, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
                     t.add_row(row)
                     if cis_eval_result.get('status') == 'fail':
                         stage_passed = False
         
     else:
-        row = [stage, 'N/A', 'N/A', 'N/A']
+        row = [stage, 'N/A', 'N/A', 'N/A', 'N/A']
     #t.add_row(row)
     # set up some global results along the way
     if stage_passed:
@@ -300,6 +347,7 @@ print("Report ID: {}".format(report_id))
 print("Origin Stage: {}".format(report_origin_stage))
 print("Status: {}".format(report_final_status))
 print("Compliance Type: {}".format(report_compliance_type))
+print("Compliance Standards: {}".format(report_compliance_standards))
 print("Stages Passed: {}".format(stages_passed))
 print("Stages Failed: {}".format(stages_failed))
 

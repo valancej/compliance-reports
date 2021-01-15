@@ -53,8 +53,16 @@ for stage in stages:
                     "name": stage_data['tool_result_data']['container']['container_id']
                 },
                 {
+                    "type": "k8s_pod_namespace",
+                    "name": stage_data['tool_result_data']['container']['k8s_pod_namespace']
+                },
+                {
+                    "type": "k8s_pod_name",
+                    "name": stage_data['tool_result_data']['container']['k8s_pod_name']
+                },
+                {
                     "type": "k8s_pod_id",
-                    "name": "example-pod-name"
+                    "name": stage_data['tool_result_data']['container']['k8s_pod_uid']
                 }
             ]
         elif stage == 'k8s':

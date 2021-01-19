@@ -403,9 +403,10 @@ print("\nArtifacts\n----------------\n")
 print(artifact_table)
 
 print("\nTotals\n----------------\n")
-print("Checks failed: {}".format(total_checks_failed))
-print("Checks passed: {}".format(total_checks_passed))
-print("Checks skipped: {}".format(total_checks_skipped))
+total = total_checks_failed + total_checks_passed + total_checks_skipped
+print("Total Sections Evaluated: {}, Sections passed: {}, Sections failed: {}, Sections skipped: {}".format(total, total_checks_passed, total_checks_failed, total_checks_skipped))
+percentage = (total_checks_passed / (total - total_checks_skipped)) * 100
+print("Percentage passed (excluding skipped): {}".format(percentage))
 
 print("\nResults\n----------------\n")
 print(result_table)

@@ -15,7 +15,7 @@ def get_compliance_result_grype_cis(data, compliance_sections):
     #    "status": "pass"
     #    }
     grype_vuln_matches = data['matches']
-    severity_threshold = 'High'
+    severity_threshold = 'Critical'
     vuln_status = 'Pass'
     
     for match in grype_vuln_matches:
@@ -300,9 +300,9 @@ else:
 header = ['Stage', standard, 'Section', 'Detail', 'Status']
 t = plain_column_table(header)
 
-total_stages_passed = 0
-total_stages_failed = 0
-total_stages_skipped = 0
+total_checks_passed = 0
+total_checks_failed = 0
+total_checks_skipped = 0
 
 for stage in result.get('results').keys():
    
@@ -321,12 +321,12 @@ for stage in result.get('results').keys():
                     row = [stage, standard, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
                     t.add_row(row)
                     if cis_eval_result.get('status') == 'Fail':
-                        total_stages_failed += 1
+                        total_checks_failed += 1
                         stage_passed = False
                     elif cis_eval_result.get('status') == 'Pass':
-                        total_stages_passed += 1
+                        total_checks_passed += 1
                     else:
-                        total_stages_skipped += 1
+                        total_checks_skipped += 1
         
         elif tool_info.get('name') == 'anchore-enterprise':
             if compliance_info.get('name') == 'cis':
@@ -336,12 +336,12 @@ for stage in result.get('results').keys():
                     row = [stage, standard, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
                     t.add_row(row)
                     if cis_eval_result.get('status') == 'Fail':
-                        total_stages_failed += 1
+                        total_checks_failed += 1
                         stage_passed = False
                     elif cis_eval_result.get('status') == 'Pass':
-                        total_stages_passed += 1
+                        total_checks_passed += 1
                     else:
-                        total_stages_skipped += 1
+                        total_checks_skipped += 1
         
         elif tool_info.get('name') == 'kube-bench':
             if compliance_info.get('name') == 'cis':
@@ -351,12 +351,12 @@ for stage in result.get('results').keys():
                     row = [stage, standard, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
                     t.add_row(row)
                     if cis_eval_result.get('status') == 'Fail':
-                        total_stages_failed += 1
+                        total_checks_failed += 1
                         stage_passed = False
                     elif cis_eval_result.get('status') == 'Pass':
-                        total_stages_passed += 1
+                        total_checks_passed += 1
                     else:
-                        total_stages_skipped += 1
+                        total_checks_skipped += 1
         
         elif tool_info.get('name') == 'anchore-cis-bench':
             if compliance_info.get('name') == 'cis':
@@ -366,12 +366,12 @@ for stage in result.get('results').keys():
                     row = [stage, standard, cis_eval_result.get('section'), cis_eval_result.get('summary'), cis_eval_result.get('status')]
                     t.add_row(row)
                     if cis_eval_result.get('status') == 'Fail':
-                        total_stages_failed += 1
+                        total_checks_failed += 1
                         stage_passed = False
                     elif cis_eval_result.get('status') == 'Pass':
-                        total_stages_passed += 1
+                        total_checks_passed += 1
                     else:
-                        total_stages_skipped += 1
+                        total_checks_skipped += 1
         
     else:
         row = [stage, 'N/A', 'N/A', 'N/A', 'N/A']
@@ -402,9 +402,11 @@ print("Stages Failed: {}".format(stages_failed))
 print("\nArtifacts\n----------------\n")
 print(artifact_table)
 
+print("\nTotals\n----------------\n")
+print("Checks failed: {}".format(total_checks_failed))
+print("Checks passed: {}".format(total_checks_passed))
+print("Checks skipped: {}".format(total_checks_skipped))
+
 print("\nResults\n----------------\n")
 print(result_table)
-print("\nTotals\n----------------\n")
-print("Stages failed: {}".format(total_stages_failed))
-print("Stages passed: {}".format(total_stages_passed))
-print("Stages skipped: {}".format(total_stages_skipped))
+

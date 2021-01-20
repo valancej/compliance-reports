@@ -155,8 +155,8 @@ def get_compliance_result_anchore_cis_bench(data, compliance_sections):
         elif compliance_section.get('name') == '2.3':
             status = data['cis_daemon_checks']['2.3'].get('status')
         elif compliance_section.get('name') == '2.4':
-            status = 'Pass'
-            # status = data['cis_daemon_checks']['2.4'].get('status')
+            #status = 'Pass'
+            status = data['cis_daemon_checks']['2.4'].get('status')
         elif compliance_section.get('name') == '2.5':
             status = data['cis_daemon_checks']['2.5'].get('status')
         elif compliance_section.get('name') == '2.6':
@@ -164,8 +164,8 @@ def get_compliance_result_anchore_cis_bench(data, compliance_sections):
         elif compliance_section.get('name') == '2.7':
             status = data['cis_daemon_checks']['2.7'].get('status')
         elif compliance_section.get('name') == '2.8':
-            status = 'Pass'
-            # status = data['cis_daemon_checks']['2.8'].get('status')
+            #status = 'Pass'
+            status = data['cis_daemon_checks']['2.8'].get('status')
         elif compliance_section.get('name') == '2.9':
             status = data['cis_daemon_checks']['2.9'].get('status')
         elif compliance_section.get('name') == '2.10':
@@ -173,11 +173,11 @@ def get_compliance_result_anchore_cis_bench(data, compliance_sections):
         elif compliance_section.get('name') == '2.11':
             status = data['cis_daemon_checks']['2.11'].get('status')
         elif compliance_section.get('name') == '2.12':
-            status = 'Pass'
-            #status = data['cis_daemon_checks']['2.12'].get('status')
+            #status = 'Pass'
+            status = data['cis_daemon_checks']['2.12'].get('status')
         elif compliance_section.get('name') == '2.13':
-            status = 'Pass'
-            #status = data['cis_daemon_checks']['2.13'].get('status')
+            #status = 'Pass'
+            status = data['cis_daemon_checks']['2.13'].get('status')
         elif compliance_section.get('name') == '2.14':
             status = data['cis_daemon_checks']['2.14'].get('status')
         elif compliance_section.get('name') == '2.15':
@@ -197,8 +197,8 @@ def get_compliance_result_anchore_cis_bench(data, compliance_sections):
         elif compliance_section.get('name') == "5.4":
             status = data['container']['cis_runtime_checks']['5.4'].get('status')
         elif compliance_section.get('name') == "5.5":
-            status = 'Pass'
-            #status = data['container']['cis_runtime_checks']['5.5'].get('status')
+            #status = 'Pass'
+            status = data['container']['cis_runtime_checks']['5.5'].get('status')
         elif compliance_section.get('name') == "5.6":
             status = data['container']['cis_runtime_checks']['5.6'].get('status')
         elif compliance_section.get('name') == "5.7":
@@ -208,18 +208,18 @@ def get_compliance_result_anchore_cis_bench(data, compliance_sections):
         elif compliance_section.get('name') == "5.9":
             status = data['container']['cis_runtime_checks']['5.9'].get('status')
         elif compliance_section.get('name') == "5.10":
-            status = 'Pass'
-            #status = data['container']['cis_runtime_checks']['5.10'].get('status')
+            #status = 'Pass'
+            status = data['container']['cis_runtime_checks']['5.10'].get('status')
         elif compliance_section.get('name') == "5.11":
-            status = 'Pass'
-            #status = data['container']['cis_runtime_checks']['5.11'].get('status')
+            #status = 'Pass'
+            status = data['container']['cis_runtime_checks']['5.11'].get('status')
         elif compliance_section.get('name') == "5.12":
             status = data['container']['cis_runtime_checks']['5.12'].get('status')
         elif compliance_section.get('name') == "5.13":
             status = data['container']['cis_runtime_checks']['5.13'].get('status')
         elif compliance_section.get('name') == "5.14":
-            status = 'Pass'
-            #status = data['container']['cis_runtime_checks']['5.14'].get('status')
+            #status = 'Pass'
+            status = data['container']['cis_runtime_checks']['5.14'].get('status')
         elif compliance_section.get('name') == "5.15":
             status = data['container']['cis_runtime_checks']['5.15'].get('status')
         elif compliance_section.get('name') == "5.16":
@@ -239,8 +239,8 @@ def get_compliance_result_anchore_cis_bench(data, compliance_sections):
         elif compliance_section.get('name') == "5.23":
             status = data['container']['cis_runtime_checks']['5.23'].get('status')
         elif compliance_section.get('name') == "5.24":
-            status = 'Pass'
-            #status = data['container']['cis_runtime_checks']['5.24'].get('status')
+            #status = 'Pass'
+            status = data['container']['cis_runtime_checks']['5.24'].get('status')
         elif compliance_section.get('name') == "5.25":
             status = data['container']['cis_runtime_checks']['5.25'].get('status') 
         elif compliance_section.get('name') == "5.26":
